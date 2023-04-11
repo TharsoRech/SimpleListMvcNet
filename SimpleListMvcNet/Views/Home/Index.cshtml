@@ -1,0 +1,97 @@
+﻿@model List<SimpleListMvcNet.Models.People.People>
+@{
+    ViewData["Title"] = "List";
+}
+<style>
+    body {
+        background-color: whitesmoke;
+    }
+
+    .form-control {
+        max-width: 30%;
+    }
+
+    #Lista {
+        margin-top: 2%;
+        width: 60%;
+    }
+
+    #Salvar {
+        margin-left: 9%;
+        margin-bottom: 5%;
+    }
+
+    .NomeListaClasse {
+        margin-left: 15px;
+        border: none;
+    }
+
+    .IdadeListaClasse {
+        margin-left: 15px;
+        border: none;
+    }
+
+    .btn-primary {
+        margin-bottom: 10px;
+        display: flex;
+        gap: 25px;
+    }
+
+    input {
+        border: none;
+        background-color: transparent;
+    }
+
+    .input-group-append {
+        gap: 10px;
+    }
+</style>
+<div class="row">
+    <button type="button" class="btn btn-primary" onclick="ListPeople()" >List people</button>
+    <div class="container">
+  <h2>Basic List using Mvc .Net Application</h2>          
+  <table class="table" id="peopleList">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Date OF Birth</th>
+        <th>Active</th>
+      </tr>
+    </thead>
+    <tbody id="bodyList">
+       @if(Model!= null)
+       {
+         @foreach (SimpleListMvcNet.Models.People.People people in Model)
+            {
+                 <tr>
+                <td>@people.Name</td>
+                <td>@people.DateOfBirth</td>
+                <td>@people.Active</td>
+                </tr>
+            }
+       }
+
+    </tbody>
+  </table>
+</div>
+</div>
+<script type="text/javascript">
+    function ListPeople(){
+        $.ajax({
+            url: 'People/GetPeople',
+            contentType: "application/json",
+            async: true,
+            dataType: "json",
+            success: function (result) {
+                $('#peopleList tbody > tr').remove();
+                for (var ar in result) {
+                    let people = result[ar];
+                    const options = { dateStyle: 'short' };
+                    let dateBirth = new Date(people.dateOfBirth).toLocaleString('en', options);
+                    $("#bodyList").append(`<tr id=${people.id}><td>${people.name}</td><td> ${dateBirth}</td><td>${people.active}</td></tr>`);
+                }
+            }
+        })
+    }
+
+</script>
